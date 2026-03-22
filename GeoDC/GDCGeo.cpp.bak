@@ -1,0 +1,196 @@
+// GDCGeo.cpp : implementation file
+//
+
+#include "pch.h"
+#include "GRgn.h"
+#include "GDCGeo.h"
+#include "math.h"
+#include "Coord.h"
+//#include "CoordMgr.h"
+
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#endif
+
+IMPLEMENT_DYNCREATE(CGDCGeo, CDC)
+IMPLEMENT_DYNAMIC(CGClientDCGeo, CGDCGeo)
+IMPLEMENT_DYNAMIC(CGWindowDCGeo, CGDCGeo)
+IMPLEMENT_DYNAMIC(CGPaintDCGeo, CGDCGeo)
+
+/////////////////////////////////////////////////////////////////////////////
+// CGDCGeo
+
+
+CGDCGeo::CGDCGeo()
+    : m_hWnd(NULL), m_pCoordMgr(nullptr) // Initialize member variables
+{
+    // Additional initialization
+}
+
+CGDCGeo::CGDCGeo(HWND hWnd)
+    : m_hWnd(hWnd)
+{
+    m_pGeoObj = NULL;
+    m_pWinOrg = NULL;
+    m_pWinExt = NULL;
+
+    m_pMapScale = NULL;
+    m_pZoomRatio = NULL;
+    m_pCoordMgr = new CCoordMgr(hWnd); // Creating a new instance of CCoordMgr
+}
+
+CGDCGeo::CGDCGeo(CDC* pDC)
+    : m_hWnd(NULL) // Initialize m_hWnd from CDC
+{
+    if (pDC)
+    {
+        CDC::Attach(pDC->m_hDC);
+    }
+
+    m_pGeoObj = NULL;
+    m_pWinOrg = NULL;
+    m_pWinExt = NULL;
+
+    m_pMapScale = NULL;
+    m_pZoomRatio = NULL;
+    m_pCoordMgr = new CCoordMgr(m_hWnd); // Creating a new instance of CCoordMgr
+}
+
+CGDCGeo::~CGDCGeo()
+{
+    // m_pGeoObj는 다른 곳에서 생성하는 것이므로 delete 하지 않는다.
+    if (m_pGeoObj != NULL) { m_pGeoObj = NULL; }
+    if (m_pWinOrg != NULL) { delete m_pWinOrg; m_pWinOrg = NULL; }
+    if (m_pWinExt != NULL) { delete m_pWinExt; m_pWinExt = NULL; }
+    if (m_pMapScale != NULL) { delete m_pMapScale; m_pMapScale = NULL; }
+    if (m_pZoomRatio != NULL) { delete m_pZoomRatio; m_pZoomRatio = NULL; }
+    delete m_pCoordMgr; // Release the CCoordMgr instance
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// CGDCGeo attributes
+
+/////////////////////////////////////////////////////////////////////////////
+// CGDCGeo operations
+
+// Set the coordinate manager instance
+void CGDCGeo::SetCoordMgr(CCoordMgr* pCoordMgr)
+{
+    // Set the instance in the coordinate manager
+    //m_pCoordMgr->SetInst(pCoordMgr);
+}
+
+// Creating geometric object
+CGPointGeo* CGDCGeo::CreatePoint(int nPoint)
+{
+    ASSERT(m_pGeoObj); // Ensure mapping mode is set
+    if (!m_pGeoObj) return NULL;
+
+    return (CGPointGeo*)m_pGeoObj->Point(nPoint);
+}
+
+CGSizeGeo* CGDCGeo::CreateSize()
+{
+    ASSERT(m_pGeoObj); // Ensure mapping mode is set
+    if (!m_pGeoObj) return NULL;
+
+    return (CGSizeGeo*)m_pGeoObj->Size();
+}
+
+CGRectGeo* CGDCGeo::CreateRect()
+{
+    ASSERT(m_pGeoObj); // Ensure mapping mode is set
+    if (!m_pGeoObj) return NULL;
+
+    return (CGRectGeo*)m_pGeoObj->Rect();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Initializations
+
+BOOL CGDCGeo::CreateCompatibleDC(CGDCGeo* pDCGeo)
+{
+    ASSERT(pDCGeo);
+    if (!pDCGeo) return FALSE;
+
+    ASSERT(pDCGeo->m_pGeoObj);
+    if (!pDCGeo->m_pGeoObj) return FALSE;
+
+    this->m_pGeoObj = pDCGeo->m_pGeoObj;
+
+    if (pDCGeo->m_pWinOrg) {
+        if (!this->m_pWinOrg) {
+            this->m_pWinOrg = this->CreatePoint();
+        }
+        CGPointGP* pPointGP = (CGPointGP*)this->m_pWinOrg;
+        pPointGP->SetPoint(pDCGeo->m_pWinOrg); // Window origin
+    }
+
+    if (pDCGeo->m_pWinExt) {
+        if (!this->m_pWinExt) {
+            this->m_pWinExt = this->CreateSize();
+        }
+        CGSizeGP* pSizeGP = (CGSizeGP*)this->m_pWinExt;
+        pSizeGP->SetSize(pDCGeo->m_pWinExt); // Window extent
+    }
+
+    if (pDCGeo->m_pMapScale) {
+        if (!this->m_pMapScale) {
+            this->m_pMapScale = new int;
+        }
+        *this->m_pMapScale = *(pDCGeo->m_pMapScale); // Map scale
+    }
+
+    if (pDCGeo->m_pZoomRatio) {
+        if (!this->m_pZoomRatio) {
+            this->m_pZoomRatio = new double;
+        }
+        *this->m_pZoomRatio = *(pDCGeo->m_pZoomRatio); // Zoom ratio
+    }
+
+    return CDC::CreateCompatibleDC((CDC*)pDCGeo);
+}
+
+// Remaining methods would follow similar structure as before...
+
+/////////////////////////////////////////////////////////////////////////////
+// Example methods and implementations related to mapping and drawing
+
+int CGDCGeo::GetMapMode() const
+{
+    int curMapMode;
+    if (this->m_pGeoObj != NULL) // Checking if mapping mode is set
+        curMapMode = m_pGeoObj->GetMapMode();
+    else
+        curMapMode = CDC::GetMapMode(); // Default mapping mode
+
+    return curMapMode;
+}
+
+CGGeoObject* CGDCGeo::SetMapMode(CGGeoObject* pGeoObj)
+{
+    ASSERT(pGeoObj);
+    if (!pGeoObj) return FALSE;
+
+    CGGeoObject* pPreObj = this->m_pGeoObj;
+
+    // Check the mapping mode
+    int nMapMode = pGeoObj->GetMapMode();
+
+    if (MM_TEXT <= nMapMode && nMapMode <= MM_ANISOTROPIC) {
+        CDC::SetMapMode(nMapMode);
+        m_pGeoObj = pGeoObj;
+        return pPreObj;
+    }
+
+    // GMM_GP, GMM_UTM
+    CDC::SetMapMode(MM_ISOTROPIC);
+    m_pGeoObj = pGeoObj;
+
+    return pPreObj; // Return the previously set object
+}
+
+// Additional method implementations...
