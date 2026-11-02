@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{B8B46055-B3A2-44A6-B6E3-7B00FA27DDE0}</ProjectGuid>
+    <Keyword>MFCDLLProj</Keyword>
+    <RootNamespace>Overlay</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>D:/work/상황도/Debug/Bin/</OutDir>
+    <IntDir>./Debug/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>d:/work/상황도/Release/Bin/</OutDir>
+    <IntDir>./Release/</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ModuleDefinitionFile>.\Overlay.def</ModuleDefinitionFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINDOWS;_DEBUG;_USRDLL;OVERLAY_IMPL;_CRT_SECURE_NO_WARNINGS;_AFXDLL ;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <DisableSpecificWarnings>4251;4244</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ModuleDefinitionFile>.\Overlay.def</ModuleDefinitionFile>
+      <OutputFile>D:/work/상황도/Debug/Bin/Overlay.dll</OutputFile>
+      <ImportLibrary>D:/work/상황도/Debug/Lib/Overlay.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>D:\work\상황도\Debug\Lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>GeoDC.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>.\Overlay.def</ModuleDefinitionFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINDOWS;NDEBUG;_USRDLL;OVERLAY_IMPL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4273;4244</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>.\Overlay.def</ModuleDefinitionFile>
+      <OutputFile>d:/work/상황도/Release/Bin/Overlay.dll</OutputFile>
+      <ImportLibrary>d:/work/상황도/Release/Lib/Overlay.lib</ImportLibrary>
+      <AdditionalDependencies>GeoDC.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>d:/work/상황도/Release/Lib</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0412</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="DrawBasicField.cpp" />
+    <ClCompile Include="DrawEditField.cpp" />
+    <ClCompile Include="DrawField.cpp" />
+    <ClCompile Include="DrawGridField.cpp" />
+    <ClCompile Include="DrawObjectIDmap.cpp" />
+    <ClCompile Include="DrawSelectEditPointField.cpp" />
+    <ClCompile Include="DrawUpperLayer.cpp" />
+    <ClCompile Include="Markup.cpp" />
+    <ClCompile Include="Mathematics.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectArc.cpp" />
+    <ClCompile Include="ObjectArcDraw.cpp" />
+    <ClCompile Include="ObjectCurve.cpp" />
+    <ClCompile Include="ObjectCurveDraw.cpp" />
+    <ClCompile Include="ObjectDiamond.cpp" />
+    <ClCompile Include="ObjectDiamondDraw.cpp" />
+    <ClCompile Include="ObjectDraw.cpp" />
+    <ClCompile Include="ObjectEightAngle.cpp" />
+    <ClCompile Include="ObjectEightAngleDraw.cpp" />
+    <ClCompile Include="ObjectEllipse.cpp" />
+    <ClCompile Include="ObjectEllipseDraw.cpp" />
+    <ClCompile Include="ObjectGroupInfo.cpp" />
+    <ClCompile Include="ObjectGroupMgr.cpp" />
+    <ClCompile Include="ObjectImage.cpp" />
+    <ClCompile Include="ObjectImageDraw.cpp" />
+    <ClCompile Include="ObjectLine.cpp" />
+    <ClCompile Include="ObjectLineDraw.cpp" />
+    <ClCompile Include="ObjectLinkedCurve.cpp" />
+    <ClCompile Include="ObjectLinkedCurveDraw.cpp" />
+    <ClCompile Include="ObjectLinkedLine.cpp" />
+    <ClCompile Include="ObjectLinkedLineDraw.cpp" />
+    <ClCompile Include="ObjectLinkedMultiCurve.cpp" />
+    <ClCompile Include="ObjectLinkedMultiCurveDraw.cpp" />
+    <ClCompile Include="ObjectLinkedMultiLine.cpp" />
+    <ClCompile Include="ObjectLinkedMultiLineDraw.cpp" />
+    <ClCompile Include="ObjectPentagon.cpp" />
+    <ClCompile Include="ObjectPentagonDraw.cpp" />
+    <ClCompile Include="ObjectPie.cpp" />
+    <ClCompile Include="ObjectPieDraw.cpp" />
+    <ClCompile Include="ObjectPoint.cpp" />
+    <ClCompile Include="ObjectPolygon.cpp" />
+    <ClCompile Include="ObjectPolygonDraw.cpp" />
+    <ClCompile Include="ObjectPolyLine.cpp" />
+    <ClCompile Include="ObjectPolyLineDraw.cpp" />
+    <ClCompile Include="ObjectProperty.cpp" />
+    <ClCompile Include="ObjectRect.cpp" />
+    <ClCompile Include="ObjectRectDraw.cpp" />
+    <ClCompile Include="ObjectRoundRect.cpp" />
+    <ClCompile Include="ObjectRoundRectDraw.cpp" />
+    <ClCompile Include="ObjectSixAngle.cpp" />
+    <ClCompile Include="ObjectSixAngleDraw.cpp" />
+    <ClCompile Include="ObjectStructure.cpp" />
+    <ClCompile Include="ObjectText.cpp" />
+    <ClCompile Include="ObjectTextDraw.cpp" />
+    <ClCompile Include="ObjectTriangle.cpp" />
+    <ClCompile Include="ObjectTriangleDraw.cpp" />
+    <ClCompile Include="Overlay.cpp" />
+    <ClCompile Include="OverlayEventMgr.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Overlay.def" />
+    <None Include="res\Overlay.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DrawBasicField.h" />
+    <ClInclude Include="DrawEditField.h" />
+    <ClInclude Include="DrawField.h" />
+    <ClInclude Include="DrawGridField.h" />
+    <ClInclude Include="DrawObjectIDmap.h" />
+    <ClInclude Include="DrawSelectEditPointField.h" />
+    <ClInclude Include="DrawUpperLayer.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="GeneralDefn4Math.h" />
+    <ClInclude Include="GraphicsBuffer.h" />
+    <ClInclude Include="Markup.h" />
+    <ClInclude Include="Mathematics.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectArc.h" />
+    <ClInclude Include="ObjectArcDraw.h" />
+    <ClInclude Include="ObjectCurve.h" />
+    <ClInclude Include="ObjectCurveDraw.h" />
+    <ClInclude Include="ObjectDiamond.h" />
+    <ClInclude Include="ObjectDiamondDraw.h" />
+    <ClInclude Include="ObjectDraw.h" />
+    <ClInclude Include="ObjectEightAngle.h" />
+    <ClInclude Include="ObjectEightAngleDraw.h" />
+    <ClInclude Include="ObjectEllipse.h" />
+    <ClInclude Include="ObjectEllipseDraw.h" />
+    <ClInclude Include="ObjectGroupInfo.h" />
+    <ClInclude Include="ObjectGroupMgr.h" />
+    <ClInclude Include="ObjectImage.h" />
+    <ClInclude Include="ObjectImageDraw.h" />
+    <ClInclude Include="ObjectLine.h" />
+    <ClInclude Include="ObjectLineDraw.h" />
+    <ClInclude Include="ObjectLinkedCurve.h" />
+    <ClInclude Include="ObjectLinkedCurveDraw.h" />
+    <ClInclude Include="ObjectLinkedLine.h" />
+    <ClInclude Include="ObjectLinkedLineDraw.h" />
+    <ClInclude Include="ObjectLinkedMultiCurve.h" />
+    <ClInclude Include="ObjectLinkedMultiCurveDraw.h" />
+    <ClInclude Include="ObjectLinkedMultiLine.h" />
+    <ClInclude Include="ObjectLinkedMultiLineDraw.h" />
+    <ClInclude Include="ObjectPentagon.h" />
+    <ClInclude Include="ObjectPentagonDraw.h" />
+    <ClInclude Include="ObjectPie.h" />
+    <ClInclude Include="ObjectPieDraw.h" />
+    <ClInclude Include="ObjectPoint.h" />
+    <ClInclude Include="ObjectPolygon.h" />
+    <ClInclude Include="ObjectPolygonDraw.h" />
+    <ClInclude Include="ObjectPolyLine.h" />
+    <ClInclude Include="ObjectPolyLineDraw.h" />
+    <ClInclude Include="ObjectProperty.h" />
+    <ClInclude Include="ObjectRect.h" />
+    <ClInclude Include="ObjectRectDraw.h" />
+    <ClInclude Include="ObjectRoundRect.h" />
+    <ClInclude Include="ObjectRoundRectDraw.h" />
+    <ClInclude Include="ObjectSixAngle.h" />
+    <ClInclude Include="ObjectSixAngleDraw.h" />
+    <ClInclude Include="ObjectStructure.h" />
+    <ClInclude Include="ObjectText.h" />
+    <ClInclude Include="ObjectTextDraw.h" />
+    <ClInclude Include="ObjectTriangle.h" />
+    <ClInclude Include="ObjectTriangleDraw.h" />
+    <ClInclude Include="Overlay.h" />
+    <ClInclude Include="OverlayDefine.h" />
+    <ClInclude Include="OverlayEventMgr.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Overlay.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
