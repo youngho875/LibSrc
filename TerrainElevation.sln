@@ -1,0 +1,18 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "TerrainElevation", "TerrainElevation\TerrainElevation.vcxproj", "{932BD305-A987-44EF-9299-234187A0E891}"
+EndProject
+Global
+ GlobalSection(SolutionConfigurationPlatforms) = preSolution
+  Debug|x64 = Debug|x64
+  Release|x64 = Release|x64
+ EndGlobalSection
+ GlobalSection(ProjectConfigurationPlatforms) = postSolution
+  {932BD305-A987-44EF-9299-234187A0E891}.Debug|x64.ActiveCfg = Debug|x64
+  {932BD305-A987-44EF-9299-234187A0E891}.Debug|x64.Build.0 = Debug|x64
+  {932BD305-A987-44EF-9299-234187A0E891}.Release|x64.ActiveCfg = Release|x64
+  {932BD305-A987-44EF-9299-234187A0E891}.Release|x64.Build.0 = Release|x64
+ EndGlobalSection
+EndGlobal

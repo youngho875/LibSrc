@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.36631.11
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoDC", "LibSrc\GeoDC\GeoDC.vcxproj", "{6B9344F7-F2FC-47AF-9D1A-B5C27D2590D5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoTrans", "LibSrc\GeoTrans\GeoTrans.vcxproj", "{EE4FB1C0-5314-4C38-BB56-9EC786A3185D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B9344F7-F2FC-47AF-9D1A-B5C27D2590D5}.Debug|x64.ActiveCfg = Debug|x64
+		{6B9344F7-F2FC-47AF-9D1A-B5C27D2590D5}.Debug|x64.Build.0 = Debug|x64
+		{6B9344F7-F2FC-47AF-9D1A-B5C27D2590D5}.Release|x64.ActiveCfg = Release|x64
+		{6B9344F7-F2FC-47AF-9D1A-B5C27D2590D5}.Release|x64.Build.0 = Release|x64
+		{EE4FB1C0-5314-4C38-BB56-9EC786A3185D}.Debug|x64.ActiveCfg = Debug|x64
+		{EE4FB1C0-5314-4C38-BB56-9EC786A3185D}.Debug|x64.Build.0 = Debug|x64
+		{EE4FB1C0-5314-4C38-BB56-9EC786A3185D}.Release|x64.ActiveCfg = Release|x64
+		{EE4FB1C0-5314-4C38-BB56-9EC786A3185D}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF77C0B2-26B9-44AB-BB57-62C6C2C9CE9B}
+	EndGlobalSection
+EndGlobal
