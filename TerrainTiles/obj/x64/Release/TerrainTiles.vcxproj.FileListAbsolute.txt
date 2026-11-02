@@ -1,0 +1,12 @@
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\gdal.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\z.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\json-c.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\libcurl.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\proj_9.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\sqlite3.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\tiff.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\jpeg62.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\liblzma.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\libexpat.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\geotiff.dll
+D:\work1\libsrc-sdk-work-20260917\libsrc\bin\x64\Release\libpng16.dll

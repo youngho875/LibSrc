@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<ItemGroup Label="ProjectConfigurations"><ProjectConfiguration Include="Debug|x64"><Configuration>Debug</Configuration><Platform>x64</Platform></ProjectConfiguration><ProjectConfiguration Include="Release|x64"><Configuration>Release</Configuration><Platform>x64</Platform></ProjectConfiguration></ItemGroup>
+<PropertyGroup Label="Globals"><ProjectGuid>{D04798AE-6BD1-4A19-A5D3-34F15B1571B7}</ProjectGuid><RootNamespace>OGCWFS</RootNamespace><WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion></PropertyGroup>
+<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+<PropertyGroup Label="Configuration"><ConfigurationType>DynamicLibrary</ConfigurationType><PlatformToolset>v142</PlatformToolset><CharacterSet>Unicode</CharacterSet><UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries><UseDebugLibraries Condition="'$(Configuration)'=='Release'">false</UseDebugLibraries></PropertyGroup>
+<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+<PropertyGroup><OutDir>$(ProjectDir)..\..\Bin\$(Configuration)\</OutDir><IntDir>$(ProjectDir)..\..\Obj\OGCWFS\$(Configuration)\</IntDir><TargetName>OGCWFS</TargetName><VcpkgEnabled>false</VcpkgEnabled><VcpkgAutoLink>false</VcpkgAutoLink></PropertyGroup>
+<ItemDefinitionGroup><ClCompile><WarningLevel>Level4</WarningLevel><PrecompiledHeader>NotUsing</PrecompiledHeader><LanguageStandard>stdcpp17</LanguageStandard><PreprocessorDefinitions>OGC_BUILD_WFS;WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions><AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions><RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary><RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreadedDLL</RuntimeLibrary><Optimization Condition="'$(Configuration)'=='Release'">MaxSpeed</Optimization></ClCompile><Link><AdditionalDependencies>winhttp.lib;xmllite.lib;shlwapi.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies><ImportLibrary>$(ProjectDir)..\..\Lib\$(Configuration)\OGCWFS.lib</ImportLibrary></Link></ItemDefinitionGroup>
+<ItemGroup><ClCompile Include="..\OGCCommon\Client.cpp"/><ClInclude Include="..\OGCCommon\OGCClient.h"/></ItemGroup>
+<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+</Project>

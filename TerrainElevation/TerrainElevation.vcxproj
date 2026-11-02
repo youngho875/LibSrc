@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+ <ItemGroup Label="ProjectConfigurations">
+  <ProjectConfiguration Include="Debug|x64"><Configuration>Debug</Configuration><Platform>x64</Platform></ProjectConfiguration>
+  <ProjectConfiguration Include="Release|x64"><Configuration>Release</Configuration><Platform>x64</Platform></ProjectConfiguration>
+ </ItemGroup>
+ <PropertyGroup Label="Globals"><ProjectGuid>{932BD305-A987-44EF-9299-234187A0E891}</ProjectGuid><Keyword>Win32Proj</Keyword><RootNamespace>TerrainElevation</RootNamespace><WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion></PropertyGroup>
+ <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+ <PropertyGroup Label="Configuration"><ConfigurationType>DynamicLibrary</ConfigurationType><PlatformToolset>v142</PlatformToolset><CharacterSet>Unicode</CharacterSet></PropertyGroup>
+ <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+ <PropertyGroup>
+  <GdalSdkDir Condition="'$(GdalSdkDir)'==''">D:\work\상황도\gdal_sdk</GdalSdkDir>
+  <OutDir>$(ProjectDir)..\bin\$(Platform)\$(Configuration)\</OutDir><IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir><TargetName>TerrainElevation</TargetName>
+ </PropertyGroup>
+ <ItemDefinitionGroup>
+  <ClCompile><LanguageStandard>stdcpp17</LanguageStandard><Optimization Condition="'$(Configuration)'=='Release'">MaxSpeed</Optimization><AdditionalIncludeDirectories>$(GdalSdkDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories><PreprocessorDefinitions>NOMINMAX;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions><AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions><WarningLevel>Level4</WarningLevel><RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary><ExceptionHandling>Sync</ExceptionHandling></ClCompile>
+  <Link><AdditionalLibraryDirectories>$(GdalSdkDir)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories><AdditionalDependencies>gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
+ </ItemDefinitionGroup>
+ <ItemGroup><ClCompile Include="TerrainElevation.cpp" /><ClInclude Include="TerrainElevation.h" /><None Include="CMakeLists.txt" /><None Include="test_terrain.cpp" /></ItemGroup>
+ <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
