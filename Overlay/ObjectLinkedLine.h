@@ -10,12 +10,12 @@
 #endif
 
 //---------------------------------------
-// ÀÛ¼ºÀÚ			: À¯¿µÈ£
-// Å¬·¡½º¸í			: --
-// ¸ñÀû				: µµÇü ±¸Á¶ Á¤ÀÇ
-// »ı¼ºÀÏ			: 2009-06-24
-// ÃÖÁ¾¼öÁ¤ÀÚ		:
-// ÃÖÁ¾¼öÁ¤ÀÏ		:
+// ì‘ì„±ì			: ìœ ì˜í˜¸
+// í´ë˜ìŠ¤ëª…			: --
+// ëª©ì 				: ë„í˜• êµ¬ì¡° ì •ì˜
+// ìƒì„±ì¼			: 2009-06-24
+// ìµœì¢…ìˆ˜ì •ì		:
+// ìµœì¢…ìˆ˜ì •ì¼		:
 //---------------------------------------
 
 namespace OVERLAY
@@ -44,11 +44,11 @@ namespace OVERLAY
 		Point* pObjectPoint[MAX_LINKED_OBJECT];
 
 	public:
-		UINT	nLinkedLine_Start_ID;		// ¿¬°ßµÉ µµÇüÀÇ ID
-		UINT	nLinkedLine_End_ID;			// ¿¬°ßµÉ µµÇüÀÇ ID
+		UINT	nLinkedLine_Start_ID;		// ì—°ê²¬ë  ë„í˜•ì˜ ID
+		UINT	nLinkedLine_End_ID;			// ì—°ê²¬ë  ë„í˜•ì˜ ID
 
-		UINT	nObject_start_point_id;	// µµÇüÀÇ ¿¬°áÁöÁ¡. pt[nObject_start_point_index]
-		UINT	nObject_end_point_id;	// µµÇüÀÇ ¿¬°áÁöÁ¡. pt[nObject_end_point_index]
+		UINT	nObject_start_point_id;	// ë„í˜•ì˜ ì—°ê²°ì§€ì . pt[nObject_start_point_index]
+		UINT	nObject_end_point_id;	// ë„í˜•ì˜ ì—°ê²°ì§€ì . pt[nObject_end_point_index]
 	};
 }
 
