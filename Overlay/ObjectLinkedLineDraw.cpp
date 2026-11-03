@@ -17,12 +17,12 @@ namespace OVERLAY
 	}
 
 	//---------------------------------------
-	// ÀÛ¼ºÀÚ			: À¯¿µÈ£
-	// ÇÔ¼ö¸í			: DrawOutLine()
-	// ¸ñÀû				: µµÇü ÆíÁý¿µ¿ª ±×¸®±â
-	// »ý¼ºÀÏ			: 2024-10-07
-	// ÃÖÁ¾¼öÁ¤ÀÚ		:
-	// ÃÖÁ¾¼öÁ¤ÀÏ		:
+	// ìž‘ì„±ìž			: ìœ ì˜í˜¸
+	// í•¨ìˆ˜ëª…			: DrawOutLine()
+	// ëª©ì 				: ë„í˜• íŽ¸ì§‘ì˜ì—­ ê·¸ë¦¬ê¸°
+	// ìƒì„±ì¼			: 2024-10-07
+	// ìµœì¢…ìˆ˜ì •ìž		:
+	// ìµœì¢…ìˆ˜ì •ì¼		:
 	//---------------------------------------
 	void CObjectLinkedLineDraw::DrawOutLine(OVERLAY::OBJECT* object, Gdiplus::Graphics* g)
 	{
@@ -46,12 +46,12 @@ namespace OVERLAY
 	}
 
 	//---------------------------------------
-	// ÀÛ¼ºÀÚ			: À¯¿µÈ£
-	// ÇÔ¼ö¸í			: DrawSelectPoint()
-	// ¸ñÀû				: µµÇü ÆíÁý¿µ¿ª ±×¸®±â
-	// »ý¼ºÀÏ			: 2024-10-07
-	// ÃÖÁ¾¼öÁ¤ÀÚ		:
-	// ÃÖÁ¾¼öÁ¤ÀÏ		:
+	// ìž‘ì„±ìž			: ìœ ì˜í˜¸
+	// í•¨ìˆ˜ëª…			: DrawSelectPoint()
+	// ëª©ì 				: ë„í˜• íŽ¸ì§‘ì˜ì—­ ê·¸ë¦¬ê¸°
+	// ìƒì„±ì¼			: 2024-10-07
+	// ìµœì¢…ìˆ˜ì •ìž		:
+	// ìµœì¢…ìˆ˜ì •ì¼		:
 	//---------------------------------------
 	void CObjectLinkedLineDraw::DrawSelectPoint(OVERLAY::OBJECT* object, Gdiplus::Graphics* g)
 	{
@@ -89,19 +89,19 @@ namespace OVERLAY
 	}
 
 	//---------------------------------------
-	// ÀÛ¼ºÀÚ			: À¯¿µÈ£
-	// ÇÔ¼ö¸í			: Draw()
-	// ¸ñÀû				: µµÇü ±×¸®±â
-	// »ý¼ºÀÏ			: 2024-10-07
-	// ÃÖÁ¾¼öÁ¤ÀÚ		:
-	// ÃÖÁ¾¼öÁ¤ÀÏ		:
+	// ìž‘ì„±ìž			: ìœ ì˜í˜¸
+	// í•¨ìˆ˜ëª…			: Draw()
+	// ëª©ì 				: ë„í˜• ê·¸ë¦¬ê¸°
+	// ìƒì„±ì¼			: 2024-10-07
+	// ìµœì¢…ìˆ˜ì •ìž		:
+	// ìµœì¢…ìˆ˜ì •ì¼		:
 	//---------------------------------------
 	void CObjectLinkedLineDraw::Draw(OVERLAY::OBJECT* object, Gdiplus::Graphics* g, int nResolution)
 	{
 		DrawLine(object, g);
 	}
 
-	// 10. ¼± (È­»ìÇ¥)
+	// 10. ì„  (í™”ì‚´í‘œ)
 	void CObjectLinkedLineDraw::DrawLine(OVERLAY::OBJECT* object, Gdiplus::Graphics* g)
 	{
 		if (object->GetPoints() < 2)
@@ -129,7 +129,7 @@ namespace OVERLAY
 				);
 		*/
 		///////////////////////////////////////////////////////////
-	// µµÇü(¼±) È­»ìÇ¥ ¼³Á¤.
+	// ë„í˜•(ì„ ) í™”ì‚´í‘œ ì„¤ì •.
 		Gdiplus::AdjustableArrowCap StartArrow(0, 0, true);
 		Gdiplus::AdjustableArrowCap EndArrow(0, 0, true);
 
