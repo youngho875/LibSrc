@@ -15,9 +15,11 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <fstream>
 namespace {
 struct Close {void operator()(GDALDataset* p)const{if(p)GDALClose(p);}};
 using Dataset=std::unique_ptr<GDALDataset,Close>;
+#include "TerrainRgbReader.h"
 struct Raster {std::string path,wkt;double west,south,east,north,resolution,unit;};
 struct Request {TerrainView view{};uint64_t ticket=0;};
 bool Valid(const TerrainView& v){return v.width>0&&v.height>0&&v.width<=2048&&v.height<=2048&&std::isfinite(v.west)&&std::isfinite(v.east)&&std::isfinite(v.north)&&std::isfinite(v.south)&&v.east>v.west&&v.east-v.west<=720&&v.north>v.south&&v.north<=90&&v.south>=-90&&fabs(v.west)<=1080&&fabs(v.east)<=1080;}
@@ -39,9 +41,9 @@ struct Engine {
         for(std::filesystem::recursive_directory_iterator it(directory,options,ec),end;it!=end&&!stop;it.increment(ec)){
             if(ec){ec.clear();continue;}if(!it->is_regular_file(ec))continue;
             auto ext=it->path().extension().u8string();for(auto& c:ext)c=(char)tolower((unsigned char)c);
-            if(ext!=".dt2"&&ext!=".dt1"&&ext!=".dt0"&&ext!=".hgt"&&ext!=".tif"&&ext!=".tiff"&&ext!=".dem"&&ext!=".img"&&ext!=".vrt")continue;
+            if(ext!=".dt2"&&ext!=".dt1"&&ext!=".dt0"&&ext!=".hgt"&&ext!=".tif"&&ext!=".tiff"&&ext!=".dem"&&ext!=".img"&&ext!=".vrt"&&ext!=".png")continue;
             Raster r;r.path=it->path().u8string();bool accepted=false;
-            Dataset ds((GDALDataset*)GDALOpenEx(r.path.c_str(),GDAL_OF_RASTER|GDAL_OF_READONLY,nullptr,nullptr,nullptr));
+            auto ds=OpenElevation(r.path,false);
             if(ds&&ds->GetRasterCount()==1){double gt[6];auto srs=ds->GetSpatialRef();
                 if(srs&&ds->GetGeoTransform(gt)==CE_None&&ds->GetRasterXSize()>0&&ds->GetRasterYSize()>0){
                     OGRSpatialReference src=*srs;src.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);auto target=WGS();Transform tr;tr.p=OGRCreateCoordinateTransformation(&src,&target);
@@ -62,7 +64,7 @@ struct Engine {
     bool Sample(double lon,double lat,double& height){
         lon=Wrap(lon);
         for(auto it=rasters.rbegin();it!=rasters.rend()&&!stop;++it){auto&r=*it;if(lon<r.west||lon>r.east||lat<r.south||lat>r.north)continue;
-            Dataset ds((GDALDataset*)GDALOpenEx(r.path.c_str(),GDAL_OF_RASTER|GDAL_OF_READONLY,nullptr,nullptr,nullptr));if(!ds)continue;
+            auto ds=OpenElevation(r.path);if(!ds)continue;
             auto source=WGS();OGRSpatialReference target;target.SetFromUserInput(r.wkt.c_str());target.SetAxisMappingStrategy(OAMS_TRADITIONAL_GIS_ORDER);Transform tr;tr.p=OGRCreateCoordinateTransformation(&source,&target);double x=lon,y=lat,gt[6],inv[6];if(!tr.p||!tr.p->Transform(1,&x,&y)||ds->GetGeoTransform(gt)!=CE_None||!GDALInvGeoTransform(gt,inv))continue;
             int px=(int)floor(inv[0]+inv[1]*x+inv[2]*y),py=(int)floor(inv[3]+inv[4]*x+inv[5]*y);if(px<0||py<0||px>=ds->GetRasterXSize()||py>=ds->GetRasterYSize())continue;
             auto band=ds->GetRasterBand(1);double value;int has=0;double nodata=band->GetNoDataValue(&has);
@@ -85,7 +87,7 @@ struct Engine {
         for(auto&r:rasters){ServiceSample();if(stop||newestView!=req.ticket)return {};if(r.north<v.south||r.south>v.north)continue;
             int first=(int)floor((v.west-r.east)/360),last=(int)ceil((v.east-r.west)/360);
             for(int copy=first;copy<=last;++copy){double shift=copy*360.0;if(r.east+shift<v.west||r.west+shift>v.east)continue;
-                Dataset src((GDALDataset*)GDALOpenEx(r.path.c_str(),GDAL_OF_RASTER|GDAL_OF_READONLY,nullptr,nullptr,nullptr));if(!src)continue;
+                auto src=OpenElevation(r.path);if(!src)continue;
                 // At overview scales, avoid warping every full-resolution DTED
                 // column. RasterIO selects a bounded preview; point queries still
                 // use the original resolution and elevation values.
