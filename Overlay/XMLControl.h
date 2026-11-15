@@ -7,7 +7,7 @@
 #include "./OverlayFileMgr/OverlayFileRecordText.h"
 #include "LayerStructure.h"
 #include "ObjectText.h"
-#include "../GeoDC/Coord.h"
+#include "GeoDC/Coord.h"
 
 
 

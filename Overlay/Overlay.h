@@ -1,17 +1,17 @@
-ï»¿// Overlay.h : Overlay DLLì˜ ì£¼ í—¤ë” íŒŒì¼
+// Overlay.h : Overlay DLLÀÇ ÁÖ Çì´õ ÆÄÀÏ
 //
 
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "PCHì— ëŒ€í•´ ì´ íŒŒì¼ì„ í¬í•¨í•˜ê¸° ì „ì— 'pch.h'ë¥¼ í¬í•¨í•©ë‹ˆë‹¤."
+	#error "PCH¿¡ ´ëÇØ ÀÌ ÆÄÀÏÀ» Æ÷ÇÔÇÏ±â Àü¿¡ 'pch.h'¸¦ Æ÷ÇÔÇÕ´Ï´Ù."
 #endif
 
-#include "resource.h"		// ì£¼ ê¸°í˜¸ì…ë‹ˆë‹¤.
+#include "resource.h"		// ÁÖ ±âÈ£ÀÔ´Ï´Ù.
 
 
 // COverlayApp
-// ì´ í´ë˜ìŠ¤ êµ¬í˜„ì— ëŒ€í•´ì„œëŠ” Overlay.cppë¥¼ ì°¸ì¡°í•˜ì„¸ìš”.
+// ÀÌ Å¬·¡½º ±¸Çö¿¡ ´ëÇØ¼­´Â Overlay.cpp¸¦ ÂüÁ¶ÇÏ¼¼¿ä.
 //
 
 class COverlayApp : public CWinApp
@@ -19,7 +19,7 @@ class COverlayApp : public CWinApp
 public:
 	COverlayApp();
 
-// ì¬ì •ì˜ì…ë‹ˆë‹¤.
+// ÀçÁ¤ÀÇÀÔ´Ï´Ù.
 public:
 	virtual BOOL InitInstance();
 
