@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "DrawGridField.h"
 #include "ObjectPoint.h"
-#include "../GeoDC/CoordMgr.h"
-#include "../GeoDC/Coord.h"
+#include "GeoDC/CoordMgr.h"
+#include "GeoDC/Coord.h"
 #include "../../inc/Useful.h"
 
 #ifdef _DEBUG

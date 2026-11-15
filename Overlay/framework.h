@@ -1,36 +1,38 @@
-ï»¿#pragma once
+#pragma once
 
 #ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN            // ê±°ì˜ ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ë‚´ìš©ì€ Windows í—¤ë”ì—ì„œ ì œì™¸í•©ë‹ˆë‹¤.
+#define VC_EXTRALEAN            // °ÅÀÇ »ç¿ëµÇÁö ¾Ê´Â ³»¿ëÀº Windows Çì´õ¿¡¼­ Á¦¿ÜÇÕ´Ï´Ù.
 #endif
 
 #include "targetver.h"
 
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // ì¼ë¶€ CString ìƒì„±ìëŠ” ëª…ì‹œì ìœ¼ë¡œ ì„ ì–¸ë©ë‹ˆë‹¤.
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // ÀÏºÎ CString »ı¼ºÀÚ´Â ¸í½ÃÀûÀ¸·Î ¼±¾ğµË´Ï´Ù.
 
-#include <afxwin.h>         // MFC í•µì‹¬ ë° í‘œì¤€ êµ¬ì„± ìš”ì†Œì…ë‹ˆë‹¤.
-#include <afxext.h>         // MFC í™•ì¥ì…ë‹ˆë‹¤.
+#include <afxwin.h>         // MFC ÇÙ½É ¹× Ç¥ÁØ ±¸¼º ¿ä¼ÒÀÔ´Ï´Ù.
+#include <afxext.h>         // MFC È®ÀåÀÔ´Ï´Ù.
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxole.h>         // MFC OLE í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
-#include <afxodlgs.h>       // MFC OLE ëŒ€í™” ìƒì í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
-#include <afxdisp.h>        // MFC ìë™í™” í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
+#include <afxole.h>         // MFC OLE Å¬·¡½ºÀÔ´Ï´Ù.
+#include <afxodlgs.h>       // MFC OLE ´ëÈ­ »óÀÚ Å¬·¡½ºÀÔ´Ï´Ù.
+#include <afxdisp.h>        // MFC ÀÚµ¿È­ Å¬·¡½ºÀÔ´Ï´Ù.
 #endif // _AFX_NO_OLE_SUPPORT
 
 #ifndef _AFX_NO_DB_SUPPORT
-#include <afxdb.h>                      // MFC ODBC ë°ì´í„°ë² ì´ìŠ¤ í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
+#include <afxdb.h>                      // MFC ODBC µ¥ÀÌÅÍº£ÀÌ½º Å¬·¡½ºÀÔ´Ï´Ù.
 #endif // _AFX_NO_DB_SUPPORT
 
 #ifndef _AFX_NO_DAO_SUPPORT
-#include <afxdao.h>                     // MFC DAO ë°ì´í„°ë² ì´ìŠ¤ í´ë˜ìŠ¤ì…ë‹ˆë‹¤.
+#include <afxdao.h>                     // MFC DAO µ¥ÀÌÅÍº£ÀÌ½º Å¬·¡½ºÀÔ´Ï´Ù.
 #endif // _AFX_NO_DAO_SUPPORT
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdtctl.h>           // Internet Explorer 4 ê³µìš© ì»¨íŠ¸ë¡¤ì— ëŒ€í•œ MFC ì§€ì›ì…ë‹ˆë‹¤.
+#include <afxdtctl.h>           // Internet Explorer 4 °ø¿ë ÄÁÆ®·Ñ¿¡ ´ëÇÑ MFC Áö¿øÀÔ´Ï´Ù.
 #endif
 #ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>                     // Windows ê³µìš© ì»¨íŠ¸ë¡¤ì— ëŒ€í•œ MFC ì§€ì›ì…ë‹ˆë‹¤.
+#include <afxcmn.h>                     // Windows °ø¿ë ÄÁÆ®·Ñ¿¡ ´ëÇÑ MFC Áö¿øÀÔ´Ï´Ù.
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 
-#include "../../inc/GdiplusH.h"
+#include <gdiplus.h>
+#pragma comment(lib, "gdiplus.lib")
+using namespace Gdiplus;
