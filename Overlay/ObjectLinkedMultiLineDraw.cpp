@@ -42,7 +42,7 @@ namespace OVERLAY
 		);
 		*/
 		///////////////////////////////////////////////////////////
-		// ÂµÂµÃ‡Ã¼(Â¼Â±) ÃˆÂ­Â»Ã¬Ã‡Â¥ Â¼Â³ÃÂ¤.
+		// µµÇü(¼±) È­»ìÇ¥ ¼³Á¤.
 		Gdiplus::AdjustableArrowCap StartArrow(0, 0, true);
 		Gdiplus::AdjustableArrowCap EndArrow(0, 0, true);
 
