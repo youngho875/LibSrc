@@ -1,4 +1,5 @@
-#pragma once
+﻿#pragma once
+#include "TerrainMesh.h"
 #include <cpl_json.h>
 #include <cpl_http.h>
 #include <cpl_vsi.h>
@@ -15,7 +16,7 @@
 #include <vector>
 namespace tiles {
 constexpr float missing=-3.4e38f;
-struct Grid { static constexpr int N=129;std::vector<float> h=std::vector<float>(N*N,missing); };
+struct Grid : TerrainMesh { static constexpr int N=129;std::vector<float> h=std::vector<float>(N*N,missing); };
 struct Reader {
  const std::vector<unsigned char>& b;size_t p=0;
  template<class T>T get(){if(p>b.size()||sizeof(T)>b.size()-p)throw std::runtime_error("truncated terrain");T v;memcpy(&v,b.data()+p,sizeof(v));p+=sizeof(v);return v;}
@@ -31,9 +32,10 @@ inline std::shared_ptr<Grid> Decode(const std::vector<unsigned char>& bytes,bool
  uint32_t n=r.get<uint32_t>();if(n<3||n>1000000||n>(bytes.size()-r.p)/6)throw std::runtime_error("invalid vertex count");
  std::vector<double> u(n),v(n),h(n);for(auto arr:{&u,&v,&h}){int value=0;for(auto&out:*arr){auto z=r.get<uint16_t>();value+=(z>>1)^-(int)(z&1);if(value<0||value>32767)throw std::runtime_error("invalid vertex delta");out=value;}}
  for(uint32_t i=0;i<n;++i){u[i]*=128./32767;v[i]*=128./32767;h[i]=lo+(hi-lo)*h[i]/32767.;}
+ g->SetVertices(u, v, h);
  size_t width=n>65536?4:2;r.skip((width-r.p%width)%width);uint32_t triangles=r.get<uint32_t>();if(triangles>2000000||triangles>(bytes.size()-r.p)/(width*3))throw std::runtime_error("invalid triangle count");
  uint64_t work=0;uint32_t highest=0;for(uint32_t t=0;t<triangles;++t){uint32_t idx[3];for(auto&i:idx){uint32_t code=width==4?r.get<uint32_t>():r.get<uint16_t>();if(code>highest)throw std::runtime_error("invalid triangle code");i=highest-code;if(!code)++highest;if(i>=n)throw std::runtime_error("invalid triangle index");}
-  auto a=idx[0],b=idx[1],c=idx[2];double det=(v[b]-v[c])*(u[a]-u[c])+(u[c]-u[b])*(v[a]-v[c]);if(fabs(det)<1e-12)continue;
+  auto a=idx[0],b=idx[1],c=idx[2];double det=(v[b]-v[c])*(u[a]-u[c])+(u[c]-u[b])*(v[a]-v[c]);if(fabs(det)<1e-12)continue;g->AddTriangle(a,b,c);
   int x0=std::max(0,(int)ceil(std::min({u[a],u[b],u[c]}))),x1=std::min(128,(int)floor(std::max({u[a],u[b],u[c]})));
   int y0=std::max(0,(int)ceil(std::min({v[a],v[b],v[c]}))),y1=std::min(128,(int)floor(std::max({v[a],v[b],v[c]})));
   work+=(uint64_t)(std::max)(0,x1-x0+1)*(std::max)(0,y1-y0+1);if(work>50000000)throw std::runtime_error("terrain raster work limit");
@@ -69,8 +71,8 @@ struct Source {
   if(cache.size()>=128){cache.erase(order.front());order.erase(order.begin());}cache[key]=g;order.push_back(key);return g;
  }
  double Y(double lat)const{if(!mercator)return (lat+90)/180;lat=std::clamp(lat,-85.0511287798,85.0511287798);return (1+log(tan(3.141592653589793/4+lat*3.141592653589793/360))/3.141592653589793)/2;}
- bool Sample(double lon,double lat,int zoom,float&h){lon=fmod(lon+180,360);if(lon<0)lon+=360;double ux=lon/360,uy=std::clamp(Y(lat),0.,std::nextafter(1.,0.));if(mercator&&fabs(lat)>85.0511287798)return false;
-  for(int z=std::min(zoom,maxzoom);z>=minzoom&&!stop;--z){int nx=(mercator?1:2)*(1<<z),ny=1<<z;double x=ux*nx,y=uy*ny;int tx=(int)x,ty=(int)y;auto g=Load(z,tx,ty);if(!g)continue;double px=(x-tx)*128,py=(y-ty)*128;if(mercator&&!heightmap){auto latitude=[](double a){return atan(sinh((2*a-1)*3.141592653589793))*180/3.141592653589793;};double south=latitude((double)ty/ny),north=latitude((double)(ty+1)/ny);py=std::clamp((lat-south)/(north-south)*128,0.,128.);}int ix=std::min(127,(int)px),iy=std::min(127,(int)py);double a=px-ix,b=py-iy;float v[4]={g->h[iy*129+ix],g->h[iy*129+ix+1],g->h[(iy+1)*129+ix],g->h[(iy+1)*129+ix+1]};if(std::find(v,v+4,missing)!=v+4)continue;h=(float)((1-b)*((1-a)*v[0]+a*v[1])+b*((1-a)*v[2]+a*v[3]));return true;}return false;
+ bool Sample(double lon,double lat,int zoom,float&h,bool precise=false){lon=fmod(lon+180,360);if(lon<0)lon+=360;double ux=lon/360,uy=std::clamp(Y(lat),0.,std::nextafter(1.,0.));if(mercator&&fabs(lat)>85.0511287798)return false;
+  for(int z=std::min(zoom,maxzoom);z>=minzoom&&!stop;--z){int nx=(mercator?1:2)*(1<<z),ny=1<<z;double x=ux*nx,y=uy*ny;int tx=(int)x,ty=(int)y;auto g=Load(z,tx,ty);if(!g)continue;double px=(x-tx)*128,py=(y-ty)*128;if(mercator&&!heightmap){auto latitude=[](double a){return atan(sinh((2*a-1)*3.141592653589793))*180/3.141592653589793;};double south=latitude((double)ty/ny),north=latitude((double)(ty+1)/ny);py=std::clamp((lat-south)/(north-south)*128,0.,128.);}if(precise && g->HasMesh()){if(g->Height(px,py,h))return true;continue;}int ix=std::min(127,(int)px),iy=std::min(127,(int)py);double a=px-ix,b=py-iy;float v[4]={g->h[iy*129+ix],g->h[iy*129+ix+1],g->h[(iy+1)*129+ix],g->h[(iy+1)*129+ix+1]};if(std::find(v,v+4,missing)!=v+4)continue;h=(float)((1-b)*((1-a)*v[0]+a*v[1])+b*((1-a)*v[2]+a*v[3]));return true;}return false;
  }
 };
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <stdint.h>
 #include <stddef.h>
 #if defined(_WIN32)
@@ -43,6 +43,9 @@ TERRAIN_API int TerrainTilesCopyFrame(TerrainTilesHandle handle,uint64_t ticket,
 TERRAIN_API uint64_t TerrainTilesRequestSample(TerrainTilesHandle handle,double longitude,double latitude);
 /* 1=valid height, 2=no data, 0=pending/stale, -1=invalid. */
 TERRAIN_API int TerrainTilesGetSample(TerrainTilesHandle handle,uint64_t ticket,double* metres);
+/* Worker-thread API: wait for completion, without polling delay. Same results as GetSample.
+   Never call from the GUI thread. timeout is capped at 1000 ms. */
+TERRAIN_API int TerrainTilesWaitSample(TerrainTilesHandle handle,uint64_t ticket,double* metres,uint32_t timeoutMs);
 TERRAIN_API int TerrainTilesGetError(TerrainTilesHandle handle,char* utf8,size_t bytes);
 #ifdef __cplusplus
 }
