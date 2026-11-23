@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <afxdisp.h>
 
@@ -13,18 +13,21 @@
 class AFX_DATA CCoordMgr
 {
 private:
-	// Singleton: »ı¼ºÀÚ¿Í ´ëÀÔ ¿¬»êÀÚ¸¦ private·Î ÀÌµ¿ÇÏ¿© ¿ÜºÎ »ı¼º ¹æÁö
+	// Singleton: ìƒì„±ìì™€ ëŒ€ì… ì—°ì‚°ìë¥¼ privateë¡œ ì´ë™í•˜ì—¬ ì™¸ë¶€ ìƒì„± ë°©ì§€
 	CCoordMgr(void);
 	CCoordMgr(const CCoordMgr&) = delete;            
 	CCoordMgr& operator= (const CCoordMgr&) = delete; 
 
 public:
 	static CCoordMgr* GetInst(void);
-	static void ReleaseInst(void); // ±âÁ¸ ÄÚµå È£È¯¿ë
+	static void ReleaseInst(void); // ê¸°ì¡´ ì½”ë“œ í˜¸í™˜ìš©
 	void CCoordMgr::SetInst(CCoordMgr* instance);
 
 public:
-	void InitDisplayParameter(CRect rect);
+	typedef bool (*DisplayTransform)(void*, double*, double*);
+    void SetDisplayTransform(DisplayTransform forward, DisplayTransform inverse, void* context);
+    bool HasDisplayTransform() const;
+    void InitDisplayParameter(CRect rect);
 	void InitDisplay(int nWidth, int nHeight);
 	void SetCenterCoord(double lon, double lat);
 
@@ -72,7 +75,7 @@ public:
 	
 
 	double DeltaXYToBearing(double fDeltaX, double fDeltaY);
-	// ¼º´É Çâ»óÀ» À§ÇØ ÂªÀº ¼öÇĞ ÇÔ¼ö´Â inlineÀ¸·Î ¼±¾ğ
+	// ì„±ëŠ¥ í–¥ìƒì„ ìœ„í•´ ì§§ì€ ìˆ˜í•™ í•¨ìˆ˜ëŠ” inlineìœ¼ë¡œ ì„ ì–¸
 	inline double DeltaXYToRange(double fDeltaX, double fDeltaY)
 	{
 		return sqrt(fDeltaX * fDeltaX + fDeltaY * fDeltaY);
@@ -112,8 +115,8 @@ public:
 	int		m_nDisplayViewHeight; 
 	double	m_fHorVerRatio;
 	bool m_bFlat;
-	double m_fWorldCenterX; // ÇöÀç È­¸é Áß½É °æµµ
-	double m_fWorldCenterY; // ÇöÀç È­¸é Áß½É À§µµ
+	double m_fWorldCenterX; // í˜„ì¬ í™”ë©´ ì¤‘ì‹¬ ê²½ë„
+	double m_fWorldCenterY; // í˜„ì¬ í™”ë©´ ì¤‘ì‹¬ ìœ„ë„
 };
 
 //#define GP_COORDMGR CCoordMgr::GetInst()

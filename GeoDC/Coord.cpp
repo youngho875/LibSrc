@@ -1649,6 +1649,12 @@ void CCoord::x_y_to_radians_lat_long (double x_coordinate, double y_coordinate, 
 				general_factor * pts_cos_ref_lat - 
 				four_e_sub_0_x_sin_lat * y_coordinate);
 
+    // Keep geographic longitude in the conventional [-pi, pi] interval.
+    // Without this, western longitudes can return as 180..309 degrees.
+    const double pi = 3.14159265358979323846;
+    if (*geographic_longitude > pi) *geographic_longitude -= 2.0 * pi;
+    if (*geographic_longitude < -pi) *geographic_longitude += 2.0 * pi;
+
 	radians_conformal_lat_to_radians_lat (conformal_latitude,
 										geographic_latitude);           
 

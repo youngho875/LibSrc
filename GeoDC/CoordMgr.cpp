@@ -1,9 +1,13 @@
-#include "pch.h"
+Ôªø#include "pch.h"
 #include "CoordMgr.h"
 #include "Coord.h"
 #include "../../generalinclude/Useful.h"
 
 #include <math.h>
+#include <cmath>
+#include <algorithm>
+#include <map>
+#include <limits>
 
 #define M_PI        3.14159265358979323846
 
@@ -36,7 +40,12 @@ CCoordMgr::CCoordMgr()
 	m_nScreenHeight=GetSystemMetrics(SM_CYSCREEN); 
 	m_fCenterX=(double)m_nScreenWidth/2.0;
 	m_fCenterY=(double)m_nScreenHeight/2.0;
-	m_fScale=(double)1.0; 
+	m_fScale=(double)1.0;
+    m_bFlat = false;
+    m_fWorldCenterX = m_fWorldCenterY = 0;
+    m_nDisplayViewWidth = m_nScreenWidth;
+    m_nDisplayViewHeight = m_nScreenHeight;
+    m_fHorVerRatio = 1.0; 
 }
 
 //void CCoordMgr::SetInst(CCoordMgr* instance)
@@ -57,18 +66,18 @@ void CCoordMgr::SetInst(CCoordMgr* instance)
 
 	if (instance == nullptr) return;
 
-	// ¡÷ø‰ ¡¬«• π◊ Ω∫ƒ…¿œ ¡§∫∏ µø±‚»≠
+	// Ï£ºÏöî Ï¢åÌëú Î∞è Ïä§ÏºÄÏùº Ï†ïÎ≥¥ ÎèôÍ∏∞Ìôî
 	this->m_fCenterX = instance->m_fCenterX;
 	this->m_fCenterY = instance->m_fCenterY;
 	this->m_fScale = instance->m_fScale;
 
-	// »≠∏È «ÿªÛµµ ¡§∫∏ µø±‚»≠
+	// ÌôîÎ©¥ Ìï¥ÏÉÅÎèÑ Ï†ïÎ≥¥ ÎèôÍ∏∞Ìôî
 	this->m_nScreenWidth = instance->m_nScreenWidth;
 	this->m_nScreenHeight = instance->m_nScreenHeight;
 	this->m_nDisplayViewWidth = instance->m_nDisplayViewWidth;
 	this->m_nDisplayViewHeight = instance->m_nDisplayViewHeight;
 
-	// ±‚≈∏ ªÛ≈¬ «√∑°±◊
+	// Í∏∞ÌÉÄ ÏÉÅÌÉú ÌîåÎûòÍ∑∏
 	this->m_bFlat = instance->m_bFlat;
 }
 
@@ -88,30 +97,30 @@ void CCoordMgr::InitDisplayParameter(CRect rect)
 void CCoordMgr::InitDisplay(int nWidth, int nHeight)
 {
 	//
-	// «‘ºˆ Ω√¿€∫Œ∫–ø° ≥÷¥¬ ∞Õ¿Ã ¡¡¿Ω assertion error πÊ¡ˆ∏¶ ¿ß«ÿ
+	// Ìï®Ïàò ÏãúÏûëÎ∂ÄÎ∂ÑÏóê ÎÑ£Îäî Í≤ÉÏù¥ Ï¢ãÏùå assertion error Î∞©ÏßÄÎ•º ÏúÑÌï¥
 	//
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	// 0¿∏∑Œ ≥™¥©±‚ πÊ¡ˆ
+	// 0ÏúºÎ°ú ÎÇòÎàÑÍ∏∞ Î∞©ÏßÄ
 	if (nWidth <= 0)  nWidth = 1;
 	if (nHeight <= 0) nHeight = 1;
 
 	m_nScreenWidth = nWidth;
 	m_nScreenHeight = nHeight;
 
-	// »≠∏È¿« π∞∏Æ¿˚ ¡ﬂΩ…¡° ∞ËªÍ («»ºø ¥‹¿ß)
+	// ÌôîÎ©¥Ïùò Î¨ºÎ¶¨Ï†Å Ï§ëÏã¨Ï†ê Í≥ÑÏÇ∞ (ÌîΩÏÖÄ Îã®ÏúÑ)
 	m_fCenterX = (double)nWidth / 2.0;
 	m_fCenterY = (double)nHeight / 2.0;
 
-	// ∞°∑Œºº∑Œ ∫Ò¿≤ ∞ËªÍ (¡ˆµµ ø÷∞Ó πÊ¡ˆøÎ)
+	// Í∞ÄÎ°úÏÑ∏Î°ú ÎπÑÏú® Í≥ÑÏÇ∞ (ÏßÄÎèÑ ÏôúÍ≥° Î∞©ÏßÄÏö©)
 	m_fHorVerRatio = (double)nWidth / (double)nHeight;
 
-	// ∫‰∆˜∆Æ ≈©±‚ æ˜µ•¿Ã∆Æ
+	// Î∑∞Ìè¨Ìä∏ ÌÅ¨Í∏∞ ÏóÖÎç∞Ïù¥Ìä∏
 	m_nDisplayViewWidth = nWidth;
 	m_nDisplayViewHeight = nHeight;
 
-	// ∫Ò∞Ì: ¿Ã»ƒ WorldXY2ScreenXY »£√‚ Ω√
-	// ø©±‚º≠ ∞ËªÍµ» m_fCenterX/Y∏¶ ±‚¡ÿ¿∏∑Œ ¡¬«• ø¿«¡º¬¿Ã ∞·¡§µÀ¥œ¥Ÿ.
+	// ÎπÑÍ≥†: Ïù¥ÌõÑ WorldXY2ScreenXY Ìò∏Ï∂ú Ïãú
+	// Ïó¨Í∏∞ÏÑú Í≥ÑÏÇ∞Îêú m_fCenterX/YÎ•º Í∏∞Ï§ÄÏúºÎ°ú Ï¢åÌëú Ïò§ÌîÑÏÖãÏù¥ Í≤∞Ï†ïÎê©ÎãàÎã§.
 	//m_fHorVerRatio = (double)(m_nDisplayViewWidth) / (double)(m_nDisplayViewHeight);
 }
 
@@ -134,41 +143,41 @@ void CCoordMgr::GetDisplayCenter(double *fCenterX, double *fCenterY)
 void CCoordMgr::WorldXY2ScreenXY(double fXWorldCoord, double fYWorldCoord,
 									long* nXScreenCoord, long* nYScreenCoord,
 									double fCenterX, double fCenterY,
-									double fWorldCenterX, double fWorldCenterY, // √ﬂ∞°µ 
+									double fWorldCenterX, double fWorldCenterY, // Ï∂îÍ∞ÄÎê®
 									double fScale)
 {
-	// ≈∏∞Ÿ ¡¬«•øÕ ¡ﬂΩ… ∞Ê¿ßµµ¿« ¬˜¿Ã(Delta) ∞ËªÍ
+	// ÌÉÄÍ≤ü Ï¢åÌëúÏôÄ Ï§ëÏã¨ Í≤ΩÏúÑÎèÑÏùò Ï∞®Ïù¥(Delta) Í≥ÑÏÇ∞
 	double dLon = fXWorldCoord - fWorldCenterX;
 	double dLat = fYWorldCoord - fWorldCenterY;
 
-	// ∞Êµµ ≥Ø¬•∫Ø∞Êº±(-180~180) ∫∏¡§
-	// ¿Ã ∑Œ¡˜¿Ã ¿÷æÓæﬂ 179µµ ø∑ø° -179µµ∞° ≥™∂ı»˜ ±◊∑¡¡˝¥œ¥Ÿ.
+	// Í≤ΩÎèÑ ÎÇ†ÏßúÎ≥ÄÍ≤ΩÏÑ†(-180~180) Î≥¥Ï†ï
+	// Ïù¥ Î°úÏßÅÏù¥ ÏûàÏñ¥Ïïº 179ÎèÑ ÏòÜÏóê -179ÎèÑÍ∞Ä ÎÇòÎûÄÌûà Í∑∏Î†§ÏßëÎãàÎã§.
 	if (dLon > 180.0)      dLon -= 360.0;
 	else if (dLon < -180.0) dLon += 360.0;
 
-	// Ω∫≈©∏∞ ¡¬«• ∫Ø»Ø
-	// ¡ﬂΩ… Ω∫≈©∏∞ ¡¬«•(fCenterX_Screen)ø°º≠ «»ºø ø¿¬˜∏∏≈≠ ¿Ãµø
+	// Ïä§ÌÅ¨Î¶∞ Ï¢åÌëú Î≥ÄÌôò
+	// Ï§ëÏã¨ Ïä§ÌÅ¨Î¶∞ Ï¢åÌëú(fCenterX_Screen)ÏóêÏÑú ÌîΩÏÖÄ Ïò§Ï∞®ÎßåÌÅº Ïù¥Îèô
 	*nXScreenCoord = (long)(fCenterX + (dLon * fScale));
-	*nYScreenCoord = (long)(fCenterY - (dLat * fScale)); // ¿ßµµ¥¬ ∫Œ»£ π›¿¸
+	*nYScreenCoord = (long)(fCenterY - (dLat * fScale)); // ÏúÑÎèÑÎäî Î∂ÄÌò∏ Î∞òÏ†Ñ
 }
 
 void CCoordMgr::WorldXY2ScreenXY(double fXWorldCoord, double fYWorldCoord,
 									long* nXScreenCoord, long* nYScreenCoord)
 {
-	// ªÛ¥Î ∞≈∏Æ ∞ËªÍ
-	double dLon = fXWorldCoord - m_fWorldCenterX; // «ˆ¿Á »≠∏È ¡ﬂΩ… ∞Êµµ
-	double dLat = fYWorldCoord - m_fWorldCenterY; // «ˆ¿Á »≠∏È ¡ﬂΩ… ¿ßµµ
+	// ÏÉÅÎåÄ Í±∞Î¶¨ Í≥ÑÏÇ∞
+	double dLon = fXWorldCoord - m_fWorldCenterX; // ÌòÑÏû¨ ÌôîÎ©¥ Ï§ëÏã¨ Í≤ΩÎèÑ
+	double dLat = fYWorldCoord - m_fWorldCenterY; // ÌòÑÏû¨ ÌôîÎ©¥ Ï§ëÏã¨ ÏúÑÎèÑ
 
-	// ∞Êµµ Wrap-around ∫∏¡§
+	// Í≤ΩÎèÑ Wrap-around Î≥¥Ï†ï
 	if (dLon > 180.0)       dLon -= 360.0;
 	else if (dLon < -180.0) dLon += 360.0;
 
-	// ∞·∞˙ ¥Î¿‘ (m_fCenterX/Y¥¬ »≠∏È¿« ¿˝π› ≈©±‚: Width/2, Height/2)
+	// Í≤∞Í≥º ÎåÄÏûÖ (m_fCenterX/YÎäî ÌôîÎ©¥Ïùò Ï†àÎ∞ò ÌÅ¨Í∏∞: Width/2, Height/2)
 	*nXScreenCoord = (long)(m_fCenterX + (dLon * m_fScale));
 	*nYScreenCoord = (long)(m_fCenterY - (dLat * m_fScale));
 }
 
-// double πˆ¿¸µµ µø¿œ«— ∑Œ¡˜ ¿˚øÎ
+// double Î≤ÑÏ†ÑÎèÑ ÎèôÏùºÌïú Î°úÏßÅ Ï†ÅÏö©
 void CCoordMgr::WorldXY2ScreenXY(double fXWorldCoord, double fYWorldCoord,
 									double* fXScreenCoord, double* fYScreenCoord)
 {
@@ -188,25 +197,25 @@ void CCoordMgr::ScreenXY2WorldXY(long nXScreenCoord, long nYScreenCoord,
 									double fWorldCenterX, double fWorldCenterY,
 									double fScale)
 {
-	// »≠∏È ¡ﬂΩ… «»ºø∑Œ∫Œ≈Õ¿« ∞≈∏Æ(Pixel Delta) ∞ËªÍ
+	// ÌôîÎ©¥ Ï§ëÏã¨ ÌîΩÏÖÄÎ°úÎ∂ÄÌÑ∞Ïùò Í±∞Î¶¨(Pixel Delta) Í≥ÑÏÇ∞
 	double dx = (double)nXScreenCoord - fCenterX;
 	double dy = (double)nYScreenCoord - fCenterY;
 
-	// «»ºø ∞≈∏Æ∏¶ ∞Ê¿ßµµ ¥‹¿ß(Degree Delta)∑Œ ∫Ø»Ø
-	// m_fScale¿Ã 0¿œ ∞ÊøÏ∏¶ ¥Î∫Ò«— πÊæÓ ƒ⁄µÂ √ﬂ∞°
+	// ÌîΩÏÖÄ Í±∞Î¶¨Î•º Í≤ΩÏúÑÎèÑ Îã®ÏúÑ(Degree Delta)Î°ú Î≥ÄÌôò
+	// m_fScaleÏù¥ 0Ïùº Í≤ΩÏö∞Î•º ÎåÄÎπÑÌïú Î∞©Ïñ¥ ÏΩîÎìú Ï∂îÍ∞Ä
 	if (fScale != 0.0) {
 		double dLon = dx / fScale;
-		double dLat = -dy / fScale; // »≠∏È ¡¬«•(Y+)øÕ ¿ßµµ(N+) πÊ«‚¿∫ π›¥Î¿Ãπ«∑Œ ∫Œ»£ π›¿¸
+		double dLat = -dy / fScale; // ÌôîÎ©¥ Ï¢åÌëú(Y+)ÏôÄ ÏúÑÎèÑ(N+) Î∞©Ìñ•ÏùÄ Î∞òÎåÄÏù¥ÎØÄÎ°ú Î∂ÄÌò∏ Î∞òÏ†Ñ
 
-		// ¡ﬂΩ… ∞Ê¿ßµµø° ∫Ø»≠∑Æ¿ª ¥ı«‘
+		// Ï§ëÏã¨ Í≤ΩÏúÑÎèÑÏóê Î≥ÄÌôîÎüâÏùÑ ÎçîÌï®
 		double resLon = fWorldCenterX + dLon;
 		double resLat = fWorldCenterY + dLat;
 
-		//∞Êµµ ¡§±‘»≠ (-180 ~ 180 π¸¿ß∏¶ ¿Ø¡ˆ«œµµ∑œ)
+		//Í≤ΩÎèÑ Ï†ïÍ∑úÌôî (-180 ~ 180 Î≤îÏúÑÎ•º Ïú†ÏßÄÌïòÎèÑÎ°ù)
 		while (resLon > 180.0)  resLon -= 360.0;
 		while (resLon < -180.0) resLon += 360.0;
 
-		// ¿ßµµ ¡¶«— (90µµ ~ -90µµ)
+		// ÏúÑÎèÑ Ï†úÌïú (90ÎèÑ ~ -90ÎèÑ)
 		if (resLat > 90.0)  resLat = 90.0;
 		if (resLat < -90.0) resLat = -90.0;
 
@@ -218,8 +227,8 @@ void CCoordMgr::ScreenXY2WorldXY(long nXScreenCoord, long nYScreenCoord,
 void CCoordMgr::ScreenXY2WorldXY(long nXScreenCoord, long nYScreenCoord,
 									double* fXWorldCoord, double* fYWorldCoord)
 {
-	// m_fCenterX/Y: »≠∏È ¡ﬂΩ… «»ºø (Width/2, Height/2)
-	// m_fCenterX_W/Y_W: «ˆ¿Á ¡ˆµµ¿« ¡ﬂΩ… ∞Ê¿ßµµ
+	// m_fCenterX/Y: ÌôîÎ©¥ Ï§ëÏã¨ ÌîΩÏÖÄ (Width/2, Height/2)
+	// m_fCenterX_W/Y_W: ÌòÑÏû¨ ÏßÄÎèÑÏùò Ï§ëÏã¨ Í≤ΩÏúÑÎèÑ
 
 	double dx = (double)nXScreenCoord - m_fCenterX;
 	double dy = (double)nYScreenCoord - m_fCenterY;
@@ -231,11 +240,11 @@ void CCoordMgr::ScreenXY2WorldXY(long nXScreenCoord, long nYScreenCoord,
 		double resLon = m_fWorldCenterX + dLon;
 		double resLat = m_fWorldCenterY + dLat;
 
-		// ∞Êµµ Wrap-around (-180~180)
+		// Í≤ΩÎèÑ Wrap-around (-180~180)
 		while (resLon > 180.0)  resLon -= 360.0;
 		while (resLon < -180.0) resLon += 360.0;
 
-		// ¿ßµµ Clamp
+		// ÏúÑÎèÑ Clamp
 		if (resLat > 90.0)  resLat = 90.0;
 		if (resLat < -90.0) resLat = -90.0;
 
@@ -246,67 +255,91 @@ void CCoordMgr::ScreenXY2WorldXY(long nXScreenCoord, long nYScreenCoord,
 */
 
 
-void CCoordMgr::WorldXY2ScreenXY(double fXWorldCoord, double fYWorldCoord, 
-										long	*nXScreenCoord, long *nYScreenCoord, 
-										double fCenterX, double fCenterY, 
-										double fScale)
+namespace {
+struct TransformEntry {CCoordMgr::DisplayTransform forward,inverse;void* context;};
+std::map<const CCoordMgr*,TransformEntry>& DisplayTransforms(){static std::map<const CCoordMgr*,TransformEntry> value;return value;}
+CCoord& DisplayCoord() { static thread_local CCoord coord; return coord; }
+void ProjectDisplay(const CCoordMgr* mgr, bool flat, double wx, double wy, double cx, double cy, double scale, double* sx, double* sy)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-	*nXScreenCoord=(long)(  fXWorldCoord*fScale  + fCenterX); 
-	*nYScreenCoord=(long)(-(fYWorldCoord*fScale) + fCenterY); 
+    auto it=DisplayTransforms().find(mgr);
+    if(it!=DisplayTransforms().end()){
+        if(!it->second.forward(it->second.context,&wx,&wy)){*sx=*sy=-1000000;return;}
+        *sx=cx+wx*scale;*sy=cy-wy*scale;return;
+    }
+    if (flat) {
+        double lat, lon;
+        DisplayCoord().x_y_to_degrees_lat_long(wx, wy, &lat, &lon);
+        wx = (lon - 127.031) * 47.5;
+        wy = (lat - 37.0861) * 60.0;
+    }
+    *sx = cx + wx * scale;
+    *sy = cy - wy * scale;
 }
-
-void CCoordMgr::WorldXY2ScreenXY(double fXWorldCoord, double fYWorldCoord, 
-										double *fXScreenCoord, double *fYScreenCoord, 
-										double fCenterX, double fCenterY, 
-										double fScale)
+void UnprojectDisplay(const CCoordMgr* mgr, bool flat, int sx, int sy, double cx, double cy, double scale, double* wx, double* wy)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-	*fXScreenCoord=fXWorldCoord*fScale  + fCenterX; 
-	*fYScreenCoord=-(fYWorldCoord*fScale) + fCenterY; 
+    if (!std::isfinite(scale) || scale <= 0) { *wx = *wy = 0; return; }
+    *wx = (sx - cx) / scale;
+    *wy = (cy - sy) / scale;
+    auto it=DisplayTransforms().find(mgr);
+    if(it!=DisplayTransforms().end()){
+        if(!it->second.inverse(it->second.context,wx,wy))*wx=*wy=std::numeric_limits<double>::quiet_NaN();
+        return;
+    }
+    if (flat) {
+        double lon = 127.031 + *wx / 47.5;
+        double lat = 37.0861 + *wy / 60.0;
+        // Longitude repeats horizontally; latitude stops at the polar edge.
+        lon = std::fmod(lon + 180.0, 360.0);
+        if (lon < 0) lon += 360.0;
+        lon -= 180.0;
+        lat = (std::max)(-90.0, (std::min)(90.0, lat));
+        DisplayCoord().degrees_lat_long_to_x_y(lat, lon, wx, wy);
+    }
 }
-
-void CCoordMgr::WorldXY2ScreenXY(double fXWorldCoord, double fYWorldCoord, 
-										long	*nXScreenCoord, long *nYScreenCoord)
+}
+void CCoordMgr::SetDisplayTransform(DisplayTransform forward,DisplayTransform inverse,void* context){
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    if(forward&&inverse)DisplayTransforms()[this]={forward,inverse,context};else DisplayTransforms().erase(this);
+}
+bool CCoordMgr::HasDisplayTransform()const{return DisplayTransforms().find(this)!=DisplayTransforms().end();}
+void CCoordMgr::WorldXY2ScreenXY(double wx, double wy, long* sx, long* sy, double cx, double cy, double scale)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-	*nXScreenCoord=(long)(  fXWorldCoord*m_fScale  + m_fCenterX); 
-	*nYScreenCoord=(long)(-(fYWorldCoord*m_fScale) + m_fCenterY); 
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    double x, y;
+    ProjectDisplay(this,m_bFlat, wx, wy, cx, cy, scale, &x, &y);
+    *sx = static_cast<long>(x); *sy = static_cast<long>(y);
 }
-
-void CCoordMgr::WorldXY2ScreenXY(double fXWorldCoord, double fYWorldCoord, 
-										double *fXScreenCoord, double *fYScreenCoord)
+void CCoordMgr::WorldXY2ScreenXY(double wx, double wy, long* sx, long* sy)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-	*fXScreenCoord=fXWorldCoord*m_fScale  + m_fCenterX; 
-	*fYScreenCoord=-(fYWorldCoord*m_fScale) + m_fCenterY; 
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    double x, y;
+    ProjectDisplay(this,m_bFlat, wx, wy, m_fCenterX, m_fCenterY, m_fScale, &x, &y);
+    *sx = static_cast<long>(x); *sy = static_cast<long>(y);
 }
-
-void CCoordMgr::ScreenXY2WorldXY(int nXScreenCoord, int nYScreenCoord, 
-								 double *fXWorldCoord, double *fYWorldCoord)
+void CCoordMgr::WorldXY2ScreenXY(double wx, double wy, double* sx, double* sy, double cx, double cy, double scale)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-	*fXWorldCoord=((double)nXScreenCoord-(double)m_fCenterX)/(double)m_fScale; 
-	*fYWorldCoord=-((double)nYScreenCoord-(double)m_fCenterY)/(double)m_fScale; 
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    double x, y;
+    ProjectDisplay(this,m_bFlat, wx, wy, cx, cy, scale, &x, &y);
+    *sx = static_cast<double>(x); *sy = static_cast<double>(y);
 }
-
-
-void CCoordMgr::ScreenXY2WorldXY(int nXScreenCoord, int nYScreenCoord, 
-										double *fXWorldCoord, double *fYWorldCoord, 								
-										double fCenterX, double fCenterY, 
-										double fScale)
+void CCoordMgr::WorldXY2ScreenXY(double wx, double wy, double* sx, double* sy)
 {
-	AFX_MANAGE_STATE(AfxGetStaticModuleState());
-
-	*fXWorldCoord=((double)nXScreenCoord-(double)fCenterX)/(double)fScale; 
-	*fYWorldCoord=-((double)nYScreenCoord-(double)fCenterY)/(double)fScale; 
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    double x, y;
+    ProjectDisplay(this,m_bFlat, wx, wy, m_fCenterX, m_fCenterY, m_fScale, &x, &y);
+    *sx = static_cast<double>(x); *sy = static_cast<double>(y);
 }
-
+void CCoordMgr::ScreenXY2WorldXY(int sx, int sy, double* wx, double* wy, double cx, double cy, double scale)
+{
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    UnprojectDisplay(this,m_bFlat, sx, sy, cx, cy, scale, wx, wy);
+}
+void CCoordMgr::ScreenXY2WorldXY(int sx, int sy, double* wx, double* wy)
+{
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    UnprojectDisplay(this,m_bFlat, sx, sy, m_fCenterX, m_fCenterY, m_fScale, wx, wy);
+}
 
 void CCoordMgr::SetCenterCoord(double lon, double lat)
 {
@@ -319,7 +352,7 @@ double CCoordMgr::DeltaXYToBearing(double fDeltaX, double fDeltaY)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	//«—±π¿∫ ¿⁄∫œ¿ª ªÁøÎ«‘. ±◊∑°º≠ 7.0¿ª ∞¢∞¢ ¥ı«ÿ¡‹.081016
+	//ÌïúÍµ≠ÏùÄ ÏûêÎ∂ÅÏùÑ ÏÇ¨Ïö©Ìï®. Í∑∏ÎûòÏÑú 7.0ÏùÑ Í∞ÅÍ∞Å ÎçîÌï¥Ï§å.081016
 	double fRadian;
 	double degree = 0.0;
 
@@ -329,7 +362,7 @@ double CCoordMgr::DeltaXYToBearing(double fDeltaX, double fDeltaY)
 //			return((fRadian * 180.0) / M_PI+7.0);
 			degree=(fRadian * 180.0) / M_PI+7.0;
 //		else if(fRadian == 0.0) return 360.0;
-//			else if(fRadian == 0.0) degree=7.0; 270µµ ¿œ∂ß 0µµ∞° µ«¥¬ √ ±‚»≠∞° ∏∑±‚ ¿ß«ÿ ¡÷ºÆ√≥∏Æ
+//			else if(fRadian == 0.0) degree=7.0; 270ÎèÑ ÏùºÎïå 0ÎèÑÍ∞Ä ÎêòÎäî Ï¥àÍ∏∞ÌôîÍ∞Ä ÎßâÍ∏∞ ÏúÑÌï¥ Ï£ºÏÑùÏ≤òÎ¶¨
 		else 
 //			return(((fRadian * 180.0) / M_PI) + 360.0+7.0);
 			degree=((fRadian * 180.0) / M_PI) + 360.0+7.0;
@@ -351,7 +384,7 @@ double CCoordMgr::DeltaVxVyToHeading(double fVelFactorX, double fVelFactorY)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	//«—±π¿∫ ¿⁄∫œ¿ª ªÁøÎ«œπ«∑Œ ∞¢±‚ 7.0∞™¿ª ¥ı«ÿ¡‹. 081016
+	//ÌïúÍµ≠ÏùÄ ÏûêÎ∂ÅÏùÑ ÏÇ¨Ïö©ÌïòÎØÄÎ°ú Í∞ÅÍ∏∞ 7.0Í∞íÏùÑ ÎçîÌï¥Ï§å. 081016
 	double fRadian=0.0;
 	double fDegree=0.0;
 
@@ -362,7 +395,7 @@ double CCoordMgr::DeltaVxVyToHeading(double fVelFactorX, double fVelFactorY)
 		else 
 			fDegree = ((fRadian * 180.0) / M_PI) + 360.0+7.0;
 	}
-	//06.07.18 πÊ¿ß ºˆ¡§ -¿Ø«ı¿Á 
+	//06.07.18 Î∞©ÏúÑ ÏàòÏ†ï -Ïú†ÌòÅÏû¨ 
 	else if (fVelFactorY == 0  && fVelFactorX > 0) fDegree = 90.0+7.0 ;
 	else if (fVelFactorY == 0  && fVelFactorX < 0) fDegree = 270.0+7.0 ;
 
@@ -547,19 +580,19 @@ void CCoordMgr::PowerSet(CCoordMgr* inst)
 
 	if (inst == nullptr) return;
 
-	// 1. »≠∏È π◊ ∫‰∆˜∆Æ π∞∏Æ ¡§∫∏ ∫πªÁ
+	// 1. ÌôîÎ©¥ Î∞è Î∑∞Ìè¨Ìä∏ Î¨ºÎ¶¨ Ï†ïÎ≥¥ Î≥µÏÇ¨
 	this->m_nScreenWidth = inst->m_nScreenWidth;
 	this->m_nScreenHeight = inst->m_nScreenHeight;
 	this->m_nDisplayViewWidth = inst->m_nDisplayViewWidth;
 	this->m_nDisplayViewHeight = inst->m_nDisplayViewHeight;
 	this->m_fHorVerRatio = inst->m_fHorVerRatio;
 
-	// 2. ¡¬«• ∫Ø»Ø «ŸΩ… ∆ƒ∂ÛπÃ≈Õ ∫πªÁ
+	// 2. Ï¢åÌëú Î≥ÄÌôò ÌïµÏã¨ ÌååÎùºÎØ∏ÌÑ∞ Î≥µÏÇ¨
 	this->m_fCenterX = inst->m_fCenterX;
 	this->m_fCenterY = inst->m_fCenterY;
 	this->m_fScale = inst->m_fScale;
 
-	// 3. ªÛ≈¬ «√∑°±◊ ∫πªÁ
+	// 3. ÏÉÅÌÉú ÌîåÎûòÍ∑∏ Î≥µÏÇ¨
 	this->m_bFlat = inst->m_bFlat;
 }
 
@@ -571,7 +604,7 @@ void CCoordMgr::WorldLonLat2ScreenXY(double fLonWorldCoord, double fLatWorldCoor
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	if (m_bFlat)
+	if (m_bFlat && !HasDisplayTransform())
 	{
 		*fXScreenCoord = ((fLonWorldCoord - 127.031) * 47.5 * fScale + fCenterX);
 		*fYScreenCoord = (-(fLatWorldCoord - 37.0861) * 60 * fScale + fCenterY);
@@ -583,8 +616,7 @@ void CCoordMgr::WorldLonLat2ScreenXY(double fLonWorldCoord, double fLatWorldCoor
 	double rexcoord, reycoord;
 	coord.degrees_lat_long_to_x_y(fLatWorldCoord, fLonWorldCoord, &rexcoord, &reycoord);
 
-	*fXScreenCoord = rexcoord * fScale + fCenterX;
-	*fYScreenCoord = -(reycoord * fScale) + fCenterY;
+	WorldXY2ScreenXY(rexcoord,reycoord,fXScreenCoord,fYScreenCoord,fCenterX,fCenterY,fScale);
 }
 
 void CCoordMgr::WorldLonLat2ScreenXY(double fLonWorldCoord, double fLatWorldCoord,
@@ -594,7 +626,7 @@ void CCoordMgr::WorldLonLat2ScreenXY(double fLonWorldCoord, double fLatWorldCoor
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState());
 
-	if (m_bFlat)
+	if (m_bFlat && !HasDisplayTransform())
 	{
 		*fXScreenCoord = ((fLonWorldCoord - 127.031) * 47.5 * fScale + fCenterX);
 		*fYScreenCoord = (-(fLatWorldCoord - 37.0861) * 60 * fScale + fCenterY);
@@ -606,7 +638,6 @@ void CCoordMgr::WorldLonLat2ScreenXY(double fLonWorldCoord, double fLatWorldCoor
 	double rexcoord, reycoord;
 	coord.degrees_lat_long_to_x_y(fLatWorldCoord, fLonWorldCoord, &rexcoord, &reycoord);
 
-	*fXScreenCoord = rexcoord * fScale + fCenterX;
-	*fYScreenCoord = -(reycoord * fScale) + fCenterY;
+	WorldXY2ScreenXY(rexcoord,reycoord,fXScreenCoord,fYScreenCoord,fCenterX,fCenterY,fScale);
 }
 
