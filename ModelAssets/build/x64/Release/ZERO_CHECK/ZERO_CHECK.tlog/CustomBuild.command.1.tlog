@@ -1,0 +1,10 @@
+^D:\WORK\상황도\LIBSRC\MODELASSETS\BUILD\CMAKEFILES\789991ED10428EE5898348D47066E89B\GENERATE.STAMP.RULE
+setlocal
+D:\work\상황도\LibSrc\ModelAssets\tools\cmake-3.30.5-windows-x86_64\bin\cmake.exe -SD:/work/상황도/LibSrc/ModelAssets -BD:/work/상황도/LibSrc/ModelAssets/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/work/상황도/LibSrc/ModelAssets/build/ModelAssets.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
